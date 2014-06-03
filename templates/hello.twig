@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Доброе утро! Давай пополять статистику!
+{% endblock %}
+
+
+{% block content %}
+	<h2 class="sub-header">Утренняя статистика</h2>
+	<div class="table-responsive">
+		{{ form_start(form, {'attr': {'role': 'form', 'class': 'form'}}) }}
+		  {{ form_errors(form) }}
+		  <div class="form-group">
+		    {{ form_label(form.morning_condition) }}
+		    {{ form_widget(form.morning_condition, {'attr': {'class': 'form-control'}}) }}
+		  </div>
+		  <div class="form-group">
+		    {{ form_label(form.current_condition) }}
+		    {{ form_widget(form.current_condition, {'attr': {'class': 'form-control'}}) }}
+		  </div>
+		  <div class="form-group">
+		    {{ form_label(form.getup_time) }}
+		    {{ form_widget(form.getup_time, {'attr': {'class': 'form-control'}}) }}
+		  </div>
+		  <div class="form-group">
+		    {{ form_label(form.alarm_time) }}
+		    {{ form_widget(form.alarm_time, {'attr': {'class': 'form-control'}}) }}
+		  </div>
+		  <div class="form-group">
+		    {{ form_label(form.weather) }}
+		    {{ form_widget(form.weather, {'attr': {'class': 'form-control'}}) }}
+		  </div>
+		  {{ form_widget(form.add, {'attr': {'class': 'btn btn-default'}}) }}
+		{{ form_end(form) }}
+	</div>
+{% endblock %}

@@ -75,7 +75,20 @@
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <h1 class="page-header">{% block title %}{% endblock %}</h1>
-
+          {# unComment for FlashBag messages  #}
+          {% if app.session.getFlashBag %}
+            <div class="row">  
+              {% set alertTypeAvaillable = [ 'info', 'success', 'warning', 'error', 'danger', 'alert'] %}
+              {% for alert in alertTypeAvaillable %}
+                  {% for message in app.session.getFlashBag.get(alert) %}
+                      <div class="alert alert-{{ alert }}" >
+                          <button class="close" data-dismiss="alert">Г—</button>
+                          {{ message|trans }}
+                      </div>
+                  {% endfor %}
+              {% endfor %}
+            </div>
+          {% endif %}
             <!-- <div class="row placeholders">
                 <div class="col-xs-6 col-sm-3 placeholder">
                   <img data-src="holder.js/200x200/auto/sky" class="img-responsive" alt="Generic placeholder thumbnail">

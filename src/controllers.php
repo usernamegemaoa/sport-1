@@ -9,6 +9,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 //Request::setTrustedProxies(array('127.0.0.1'));
 
 $app->match('/', function (Request $request) use ($app) {
+    $sql = 'SELECT date FROM morning_statistics WHERE date >= :date LIMIT 1';
+    $params = array(
+        'date' => date('Y-m-d 06:00:00')
+        );
+    if (!$app['db']->executeQuery($sql, $params)->fetch()) {
+        return $app->redirect($app['url_generator']->generate('hello'));
+    }
     $sql = 'SELECT id, name FROM places';
     $dbPlaces = $app['db']->fetchAll($sql);
     foreach ($dbPlaces as $place) {
@@ -57,6 +64,35 @@ $app->match('/', function (Request $request) use ($app) {
 ->bind('dashboard')
 ;
 
+// public function defaultForm () {
+//     $form = $builder
+//         ->setAction($app["url_generator"]->generate('pullups'))
+//         ->add('value', 'integer', 
+//             array(
+//                 'attr' => array(
+//                     'placeholder' => 'Количество подтягиваний',
+//                     'value' => '10'
+//                 ),
+//                 'required' => true
+//             )
+//         )
+//         ->add('place', 'choice', array(
+//             'choices' => $places
+//             ))
+//         ->add('add', 'submit');
+//     return $form;
+// }
+
+// public function getForm() {
+//     $form = $this->defaultForm();
+//     $form->add('place', 'choice', array(
+//             'choices' => $places
+//             ));
+//     $form->getForm();
+//     -----------------
+//     или не полиформировать этот метод
+// }
+
 $app->match('/pullups', function (Request $request) use ($app) {
     $sql = 'SELECT id, name FROM places';
     $dbPlaces = $app['db']->fetchAll($sql);
@@ -95,7 +131,7 @@ $app->match('/pullups', function (Request $request) use ($app) {
     }
     $sql = 'SELECT ups.value as value, ups.timestamp as timestamp, p.name as placename FROM pullups ups JOIN places p ON ups.place = p.id WHERE ups.timestamp > :dates';
     $params = array(
-        ':dates' => date('Y-m-d 00:00:00')
+        'dates' => date('Y-m-d 00:00:00')
         );
     $pullups = $app['db']->fetchAll($sql, $params);
     $sql = 'SELECT SUM(value) as sum FROM pullups';
@@ -156,6 +192,74 @@ $app->match('/pushups', function (Request $request) use ($app) {
         ));
 })
 ->bind('pushups')
+;
+
+$app->match('/hello', function (Request $request) use ($app) {
+    $sql = 'SELECT id, value FROM conditions';
+    $dbConditions = $app['db']->fetchAll($sql);
+    foreach ($dbConditions as $condition) {
+        $conditions[$condition['id']] = $condition['value'];
+    }
+
+    $sql = 'SELECT id, value FROM weather';
+    $dbWeathers = $app['db']->fetchAll($sql);
+    foreach ($dbWeathers as $weather) {
+        $weathers[$weather['id']] = $weather['value'];
+    }
+
+    $builder = $app['form.factory']->createBuilder('form');
+    $form = $builder
+        ->setAction($app["url_generator"]->generate('hello'))
+        ->add('morning_condition', 'choice', array(
+            'choices' => $conditions,
+            'required' => true,
+            'label' => 'Состояние утром'
+            ))
+        ->add('current_condition', 'choice', array(
+            'choices' => $conditions,
+            'required' => true,
+            'label' => 'Состояние на данный момент'
+            ))
+        ->add('getup_time', 'time', array(
+            'required' => true,
+            'label' => 'Подъем был в ... (надеюсь что утра)'
+            ))
+        ->add('alarm_time', 'time', array(
+            'required' => true,
+            'label' => 'А будильник я ставил на ... '
+            ))
+        ->add('weather', 'choice', array(
+            'choices' => $weathers,
+            'required' => true,
+            'label' => 'Погодка утром'
+            ))
+        ->add('add', 'submit')
+        ->getForm();
+    
+    // Add check for same name
+    $form->handleRequest($request);
+    if ($form->isSubmitted()) {
+        if ($form->isValid()) {
+            $data = $form->getData();
+            $app['db']->insert('morning_statistics', array(
+                'morning_condition' => $data['morning_condition'],
+                'current_condition' => $data['current_condition'],
+                'getup_time' => $data['getup_time']->format('H:i:s'),
+                'alarm_time' => $data['alarm_time']->format('H:i:s'),
+                'weather' => $data['weather']
+                ));
+            $app['session']->getFlashBag()->add('success', 'Утренняя статистика пополнена. Хорошено дня, Романыч!');
+            return $app->redirect($app['url_generator']->generate('dashboard'));    
+        } else {
+            $app['session']->getFlashBag()->add('danger', 'Утренняя статистика утеряна... Нужно обновить вручную. Или исправляй баги ;-)');
+            return $app->redirect($app['url_generator']->generate('hello'));
+        }
+    }
+    return $app['twig']->render('hello.twig', array(
+        'form' => $form->createView()
+        ));
+})
+->bind('hello')
 ;
 
 $app->error(function (\Exception $e, $code) use ($app) {
