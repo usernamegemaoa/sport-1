@@ -37,8 +37,12 @@ $app->match('/', function (Request $request) use ($app) {
         }
     }
     $sql = 'SELECT value, timestamp FROM pullups';
+    $pullups = $app['db']->fetchAll($sql);
+    $sql = 'SELECT SUM(value) as sum FROM pullups';
+    $sum = $app['db']->executeQuery($sql)->fetch();
     return $app['twig']->render('index.html', array(
-        'pullups' => $app['db']->fetchAll($sql),
+        'pullups' => $pullups,
+        'sum' => $sum,
         'form' => $form->createView()
         ));
 })
