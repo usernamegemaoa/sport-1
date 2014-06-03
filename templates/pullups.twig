@@ -6,20 +6,25 @@
 
 
 {% block content %}
-	<h2 class="sub-header">Section title</h2>
+	<h2 class="sub-header">Добавим в статистику</h2>
 	<div class="table-responsive">
 	{{ form_start(form, {'attr': {'role': 'form', 'class': 'form'}}) }}
 	  {{ form_errors(form) }}
 	  <div class="form-group">
-	    <label class="sr-only">{{ form_label(form.value) }}</label>
+	    {{ form_label(form.value) }}
 	    {{ form_widget(form.value, {'attr': {'class': 'form-control'}}) }}
 	  </div>
 	  <div class="form-group">
-	    <label class="sr-only">{{ form_label(form.place) }}</label>
+	    {{ form_label(form.place) }}
 	    {{ form_widget(form.place, {'attr': {'class': 'form-control'}}) }}
+	  </div>
+	  <div class="form-group">
+	    {{ form_label(form.fatigue) }}
+	    {{ form_widget(form.fatigue, {'attr': {'class': 'form-control'}}) }}
 	  </div>
 	  {{ form_widget(form.add, {'attr': {'class': 'btn btn-default'}}) }}
 	{{ form_end(form) }}
+	<h2 class="sub-header">Статистика за сегодня</h2>
 	<table class="table table-hover">
 		<thead>
 			<tr>

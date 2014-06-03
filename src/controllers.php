@@ -108,12 +108,24 @@ $app->match('/pullups', function (Request $request) use ($app) {
                     'placeholder' => 'Количество подтягиваний',
                     'value' => '10'
                 ),
-                'required' => true
+                'required' => true,
+                'label' => 'Количество подтягиваний'
             )
         )
         ->add('place', 'choice', array(
+            'label' => 'Где занимаешься?',
             'choices' => $places
             ))
+        ->add('fatigue', 'integer', 
+            array(
+                'attr' => array(
+                    'placeholder' => 'Усталость',
+                    'value' => '5'
+                ),
+                'label' => 'Усталость',
+                'required' => true
+            )
+        )
         ->add('add', 'submit')
         ->getForm();
     
@@ -124,8 +136,10 @@ $app->match('/pullups', function (Request $request) use ($app) {
             $data = $form->getData();
             $app['db']->insert('pullups', array(
                 'value' => $data['value'],
-                'place' => $data['place']
+                'place' => $data['place'],
+                'fatigue' => $data['fatigue']
                 ));
+            $app['session']->getFlashBag()->add('success', 'Подтягивания учтены. Так держать!');
             return $app->redirect($app['url_generator']->generate('pullups'));
         }
     }
@@ -157,15 +171,27 @@ $app->match('/pushups', function (Request $request) use ($app) {
         ->add('value', 'integer', 
             array(
                 'attr' => array(
-                    'placeholder' => 'Количество подтягиваний',
+                    'placeholder' => 'Количество отжиманий',
                     'value' => '10'
                 ),
+                'label' => 'Количество отжиманий',
                 'required' => true
             )
         )
         ->add('place', 'choice', array(
+            'label' => 'Где занимаешься?',
             'choices' => $places
             ))
+        ->add('fatigue', 'integer', 
+            array(
+                'attr' => array(
+                    'placeholder' => 'Усталость',
+                    'value' => '5'
+                ),
+                'label' => 'Усталость',
+                'required' => true
+            )
+        )
         ->add('add', 'submit')
         ->getForm();
     
@@ -176,8 +202,10 @@ $app->match('/pushups', function (Request $request) use ($app) {
             $data = $form->getData();
             $app['db']->insert('pushups', array(
                 'value' => $data['value'],
-                'place' => $data['place']
+                'place' => $data['place'],
+                'fatigue' => $data['fatigue']
                 ));
+            $app['session']->getFlashBag()->add('success', 'Отжимания учтены. Будь крепким как скала!');
             return $app->redirect($app['url_generator']->generate('pushups'));
         }
     }
