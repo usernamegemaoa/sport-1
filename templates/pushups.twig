@@ -1,5 +1,9 @@
 {% extends "layout.html" %}
 
+{% block title %}
+    Отжимания
+{% endblock %}
+
 {% block content %}
 	<h2 class="sub-header">Section title</h2>
 	<div class="table-responsive">
@@ -23,11 +27,11 @@
 				<th>Место тренировки</th>
 			</tr>
 		</thead>
-	{% for pullup in pullups %}
+	{% for pushups in pushups %}
 	    <tr>
-	    	<td>{{ pullup.timestamp }}</td>
-	    	<td>{{ pullup.value }}</td>
-	    	<td>{{ pullup.placename }}</td>
+	    	<td>{{ pushups.timestamp }}</td>
+	    	<td>{{ pushups.value }}</td>
+	    	<td>{{ pushups.placename }}</td>
 	    </tr>
 	{% endfor %}
 	</table>
