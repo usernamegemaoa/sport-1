@@ -8,10 +8,41 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 //Request::setTrustedProxies(array('127.0.0.1'));
 
-$app->get('/', function () use ($app) {
-    return $app['twig']->render('index.html', array());
+$app->match('/', function (Request $request) use ($app) {
+    $builder = $app['form.factory']->createBuilder('form');
+    $form = $builder
+        ->setAction($app["url_generator"]->generate('dashboard'))
+        ->add('value', 'integer', 
+            array(
+                'attr' => array(
+                    'placeholder' => 'Количество подтягиваний',
+                    'value' => '10'
+                ),
+                'required' => true
+            )
+        )
+        ->add('add', 'submit')
+        ->getForm();
+    
+    // Add check for same name
+    $form->handleRequest($request);
+    if ($form->isSubmitted()) {
+        if ($form->isValid()) {
+            $data = $form->getData();
+            $value = $data['value'];
+            $app['db']->insert('pullups', array(
+                'value' => $value
+                ));
+            return $app->redirect($app['url_generator']->generate('dashboard'));
+        }
+    }
+    $sql = 'SELECT value, timestamp FROM pullups';
+    return $app['twig']->render('index.html', array(
+        'pullups' => $app['db']->fetchAll($sql),
+        'form' => $form->createView()
+        ));
 })
-->bind('homepage')
+->bind('dashboard')
 ;
 
 $app->error(function (\Exception $e, $code) use ($app) {

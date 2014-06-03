@@ -1,5 +1,28 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    Welcome to your new Silex Application!
+	<h2 class="sub-header">Section title</h2>
+	<div class="table-responsive">
+	{{ form_start(form, {'attr': {'role': 'form', 'class': 'form'}}) }}
+	  {{ form_errors(form) }}
+	  <div class="form-group">
+	    <label class="sr-only">{{ form_label(form.value) }}</label>
+	    {{ form_widget(form.value, {'attr': {'class': 'form-control'}}) }}
+	  </div>
+	  {{ form_widget(form.add, {'attr': {'class': 'btn btn-default'}}) }}
+	{{ form_end(form) }}
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>Время</th>
+				<th>Количество подтягиваний</th>
+			</tr>
+		</thead>
+	{% for pullup in pullups %}
+	    <tr>
+	    	<td>{{ pullup.timestamp }}</td>
+	    	<td>{{ pullup.value }}</td>
+	    </tr>
+	{% endfor %}
+	</div>
 {% endblock %}
