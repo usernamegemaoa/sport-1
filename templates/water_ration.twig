@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Прием воды за день
+{% endblock %}
+
+{% block content %}
+	<h2 class="sub-header">Добавим в статистику</h2>
+	<div class="table-responsive">
+	{{ form_start(form, {'attr': {'role': 'form', 'class': 'form'}}) }}
+	  {{ form_errors(form) }}
+	  <div class="form-group">
+	    {{ form_label(form.time) }}
+	    {{ form_widget(form.time, {'attr': {'class': 'form-control'}}) }}
+	  </div>
+	  <div class="form-group">
+	    {{ form_label(form.type) }}
+	    {{ form_widget(form.type, {'attr': {'class': 'form-control'}}) }}
+	  </div>
+	  <div class="form-group">
+	    {{ form_label(form.value) }}
+	    {{ form_widget(form.value, {'attr': {'class': 'form-control'}}) }}
+	  </div>
+	  {{ form_widget(form.add, {'attr': {'class': 'btn btn-default'}}) }}
+	{{ form_end(form) }}
+	<h2 class="sub-header">Статистика за сегодня</h2>
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>Время</th>
+				<th>Что пил?</th>
+				<th>Сколько выпил?</th>
+			</tr>
+		</thead>
+	{% for ration in rations %}
+	    <tr>
+	    	<td>{{ ration.time }}</td>
+	    	<td>{{ ration.type_name }}</td>
+	    	<td>{{ ration.value }}</td>
+	    </tr>
+	{% endfor %}
+	</table>
+	<hr/>
+	<p>Итого: <b>{{ sum }}</b></p>
+	</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Прием пиши
+{% endblock %}
+
+
+{% block content %}
+	<h2 class="sub-header">Добавим в статистику</h2>
+	<div class="table-responsive">
+	{{ form_start(form, {'attr': {'role': 'form', 'class': 'form'}}) }}
+	  {{ form_errors(form) }}
+	  <div class="form-group">
+	    {{ form_label(form.timestamp) }}
+	    {{ form_widget(form.timestamp, {'attr': {'class': 'form-control'}}) }}
+	  </div>
+	  <div class="form-group">
+	    {{ form_label(form.kkal) }}
+	    {{ form_widget(form.kkal, {'attr': {'class': 'form-control'}}) }}
+	  </div>
+	  <div class="form-group">
+	    {{ form_label(form.type) }}
+	    {{ form_widget(form.type, {'attr': {'class': 'form-control'}}) }}
+	  </div>
+	  {{ form_widget(form.add, {'attr': {'class': 'btn btn-default'}}) }}
+	{{ form_end(form) }}
+	<h2 class="sub-header">Статистика за сегодня</h2>
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>Номер приема пиши</th>
+				<th>Время приема пиши</th>
+				<th>Килокаллории</th>
+				<th>Как поел?</th>
+			</tr>
+		</thead>
+	{% for ration in rations %}
+	    <tr>
+	    	<td>{{ ration.number }}</td>
+	    	<td>{{ ration.time }}</td>
+	    	<td>{{ ration.kkal }}</td>
+	    	<td>{{ ration.type_name }}</td>
+	    </tr>
+	{% endfor %}
+	</table>
+	</div>
+{% endblock %}
