@@ -148,8 +148,11 @@ $app->match('/pullups', function (Request $request) use ($app) {
         'dates' => date('Y-m-d 00:00:00')
         );
     $pullups = $app['db']->fetchAll($sql, $params);
-    $sql = 'SELECT SUM(value) as sum FROM pullups';
-    $sum = $app['db']->executeQuery($sql)->fetch();
+    $sql = 'SELECT SUM(value) as sum FROM pullups WHERE timestamp > :dates';
+    $params = array(
+        'dates' => date('Y-m-d 00:00:00')
+        );
+    $sum = $app['db']->executeQuery($sql, $params)->fetch();
     return $app['twig']->render('pullups.twig', array(
         'pullups' => $pullups,
         'sum' => $sum,
@@ -211,8 +214,11 @@ $app->match('/pushups', function (Request $request) use ($app) {
     }
     $sql = 'SELECT ups.value as value, ups.timestamp as timestamp, p.name as placename FROM pushups ups JOIN places p ON ups.place = p.id';
     $pushups = $app['db']->fetchAll($sql);
-    $sql = 'SELECT SUM(value) as sum FROM pushups';
-    $sum = $app['db']->executeQuery($sql)->fetch();
+    $sql = 'SELECT SUM(value) as sum FROM pushups WHERE timestamp > :dates';
+    $params = array(
+        'dates' => date('Y-m-d 00:00:00')
+        );
+    $sum = $app['db']->executeQuery($sql, $params)->fetch();
     return $app['twig']->render('pushups.twig', array(
         'pushups' => $pushups,
         'sum' => $sum,
@@ -256,6 +262,10 @@ $app->match('/hello', function (Request $request) use ($app) {
             'required' => true,
             'label' => 'А будильник я ставил на ... '
             ))
+        ->add('bed_time', 'time', array(
+            'required' => true,
+            'label' => 'К тому же я лег спать в ...'
+            ))
         ->add('weather', 'choice', array(
             'choices' => $weathers,
             'required' => true,
@@ -274,6 +284,7 @@ $app->match('/hello', function (Request $request) use ($app) {
                 'current_condition' => $data['current_condition'],
                 'getup_time' => $data['getup_time']->format('H:i:s'),
                 'alarm_time' => $data['alarm_time']->format('H:i:s'),
+                'bed_time' => $data['bed_time']->format('H:i:s'),
                 'weather' => $data['weather']
                 ));
             $app['session']->getFlashBag()->add('success', 'Утренняя статистика пополнена. Хорошено дня, Романыч!');
