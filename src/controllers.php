@@ -448,7 +448,7 @@ $app->match('/water', function (Request $request) use ($app) {
         return $app->redirect($app['url_generator']->generate('water_ration'));
     }
 
-    $sql = 'SELECT w.time as time, w.value as value, t.value as type_name FROM water_ration w JOIN water_types t WHERE t.id = w.type AND w.time > :dates ORDER BY w.time ASC';
+    $sql = 'SELECT w.time as time, w.value as value, t.value as type_name FROM water_ration w JOIN water_types t WHERE t.id = w.type AND w.timestamp > :dates ORDER BY w.time ASC';
     $params = array(
         'dates' => date('Y-m-d 00:00:00')
         );
