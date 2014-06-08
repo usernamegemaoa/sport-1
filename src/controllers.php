@@ -462,6 +462,81 @@ $app->match('/water', function (Request $request) use ($app) {
 ->bind('water_ration')
 ;
 
+$app->match('/summer', function (Request $request) use ($app) {
+    $sql = 'SELECT serial_number, name, anounce, detail_info, photo FROM summer';
+    $weekends = $app['db']->fetchAll($sql);
+    foreach ($weekends as &$day) {
+        $startUnixTime = strtotime('7 June 2014') + (7 * ($day['serial_number'] - 1) * 24 * 60 * 60);
+        $day['dates'] = array(
+            'from' => date('Y-m-d', $startUnixTime),
+            'to' => date('Y-m-d', $startUnixTime + (24 * 60 * 60))
+            );
+    }
+
+    return $app['twig']->render('summer/summer.twig', array(
+        'weekends' => $weekends
+        ));
+
+})
+->bind('summer')
+;
+
+$app->match('/summer/update/{serial_number}', function (Request $request, $serial_number) use ($app) {
+    if ($serial_number == '0') {
+        return $app->redirect($app['url_generator']->generate('summer'));
+    }
+    $sql = 'SELECT serial_number, name, anounce, detail_info, photo FROM summer WHERE serial_number = :serial_number LIMIT 1';
+    $params = array(
+        'serial_number' => $serial_number
+        );
+    $weekend = $app['db']->executeQuery($sql, $params)->fetch();
+    $builder = $app['form.factory']->createBuilder('form');
+    $form = $builder
+        ->setAction($app["url_generator"]->generate('summer_update'))
+        ->add('name', 'text', array(
+            'label' => 'Название праздника!',
+            'required' => true
+            ))
+        ->add('anounce', 'textarea', array(
+            'required' => true,
+            'label' => 'Небольшое вступление'
+            ))
+        ->add('detail_info', 'textarea', array(
+            'required' => true,
+            'label' => 'Суть развлекухи!'
+            ))
+        ->add('add', 'submit')
+        ->getForm();
+    
+    // Add check for same name
+    $form->handleRequest($request);
+    if ($form->isSubmitted()) {
+        if ($form->isValid()) {
+            $data = $form->getData();
+            $app['db']->update('summer', array(
+                'name' => $data['name'],
+                'anounce' => $data['anounce'],
+                'detail_info' => $data['detail_info']
+                ), array(
+                'serial_number' => $weekend['serial_number']
+                )
+            );
+            $app['session']->getFlashBag()->add('success', 'Что записали то и запомнило! Теперь не забудешь, если все записали конечно ;)');    
+        } else {
+            $app['session']->getFlashBag()->add('danger', 'Что-то пошло не так. Имеются ошибки при добавлении. Хорошо что в здоровом теле здоровый ум :-)');
+        }
+        return $app->redirect($app['url_generator']->generate('summer'));
+    }
+
+    return $app['twig']->render('summer/update.twig', array(
+        'weekend' => $weekend,
+        'form' => $form->createView()
+        ));
+})
+->bind('summer_update')
+->value('serial_number', '0')
+;
+
 $app->error(function (\Exception $e, $code) use ($app) {
     if ($app['debug']) {
         return;

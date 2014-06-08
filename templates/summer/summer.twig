@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Летние выходные
+{% endblock %}
+
+
+{% block content %}
+	<h2 class="sub-header">ЛЕТООООООО!</h2>
+	<div class="table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Даты</th>
+					<th>Название</th>
+					<th>Анонс</th>
+					<th>Подробно</th>
+				</tr>
+			</thead>
+		{% for weekend in weekends %}
+		    <tr>
+		    	<td>{{ weekend.serial_number }}</td>
+		    	<td>{{ weekend.dates.from }} - {{ weekend.dates.to }}</td>
+		    	<td>{{ weekend.name }}</td>
+		    	<td>{{ weekend.anounce }}</td>
+		    	<td>{{ weekend.detail_info }}</td>
+		    </tr>
+		{% endfor %}
+		</table>
+	</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Летний выходной!
+{% endblock %}
+
+
+{% block content %}
+	<!-- <h2 class="sub-header">Добавим в статистику</h2> -->
+	<div class="table-responsive">
+	{{ form_start(form, {'attr': {'role': 'form', 'class': 'form', 'value': weekend.name}}) }}
+	  {{ form_errors(form) }}
+	  <div class="form-group">
+	    {{ form_label(form.name) }}
+	    {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+	  </div>
+	  <div class="form-group">
+	    {{ form_label(form.anounce) }}
+	    {{ form_widget(form.anounce, {'attr': {'class': 'form-control'}}) }}
+	  </div>
+	  <div class="form-group">
+	    {{ form_label(form.detail_info) }}
+	    {{ form_widget(form.detail_info, {'attr': {'class': 'form-control'}}) }}
+	  </div>
+	  {{ form_widget(form.add, {'attr': {'class': 'btn btn-default'}}) }}
+	{{ form_end(form) }}
+	</div>
+{% endblock %}
