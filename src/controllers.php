@@ -468,8 +468,8 @@ $app->match('/summer', function (Request $request) use ($app) {
     foreach ($weekends as &$day) {
         $startUnixTime = strtotime('7 June 2014') + (7 * ($day['serial_number'] - 1) * 24 * 60 * 60);
         $day['dates'] = array(
-            'from' => date('Y-m-d', $startUnixTime),
-            'to' => date('Y-m-d', $startUnixTime + (24 * 60 * 60))
+            'from' => date('d.m.Y', $startUnixTime),
+            'to' => date('d.m.Y', $startUnixTime + (24 * 60 * 60))
             );
     }
 
@@ -479,6 +479,26 @@ $app->match('/summer', function (Request $request) use ($app) {
 
 })
 ->bind('summer')
+;
+
+$app->match('/summer/modal/{serial_number}', function (Request $request, $serial_number) use ($app) {
+   $sql = 'SELECT serial_number, name, anounce, detail_info, photo FROM summer WHERE serial_number = :serial_number LIMIT 1';
+    $params = array(
+        'serial_number' => $serial_number
+        );
+    $weekend = $app['db']->executeQuery($sql, $params)->fetch();
+    $startUnixTime = strtotime('7 June 2014') + (7 * ($weekend['serial_number'] - 1) * 24 * 60 * 60);
+    $weekend['dates'] = array(
+        'from' => date('d.m.Y', $startUnixTime),
+        'to' => date('d.m.Y', $startUnixTime + (24 * 60 * 60))
+        );
+
+    return $app['twig']->render('summer/modal.twig', array(
+        'weekend' => $weekend
+        ));
+
+})
+->bind('summer_modal')
 ;
 
 $app->match('/summer/update/{serial_number}', function (Request $request, $serial_number) use ($app) {
@@ -492,18 +512,21 @@ $app->match('/summer/update/{serial_number}', function (Request $request, $seria
     $weekend = $app['db']->executeQuery($sql, $params)->fetch();
     $builder = $app['form.factory']->createBuilder('form');
     $form = $builder
-        ->setAction($app["url_generator"]->generate('summer_update'))
+        ->setAction($app["url_generator"]->generate('summer_update', array('serial_number' => $serial_number)))
         ->add('name', 'text', array(
             'label' => 'Название праздника!',
-            'required' => true
+            'required' => true,
+            'data' => $weekend['name']
             ))
         ->add('anounce', 'textarea', array(
             'required' => true,
-            'label' => 'Небольшое вступление'
+            'label' => 'Небольшое вступление',
+            'data' => $weekend['anounce']
             ))
         ->add('detail_info', 'textarea', array(
             'required' => true,
-            'label' => 'Суть развлекухи!'
+            'label' => 'Суть развлекухи!',
+            'data' => $weekend['detail_info']
             ))
         ->add('add', 'submit')
         ->getForm();

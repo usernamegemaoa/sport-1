@@ -25,4 +25,15 @@
 	  {{ form_widget(form.add, {'attr': {'class': 'btn btn-default'}}) }}
 	{{ form_end(form) }}
 	</div>
+	<!-- PAGE RELATED PLUGIN(S) -->
+	<script src="{{ app.request.basepath }}/js/plugin/ckeditor/ckeditor.js"></script>
+	<script type="text/javascript">
+	// DO NOT REMOVE : GLOBAL FUNCTIONS!
+	$(document).ready(function() {
+		CKEDITOR.replace( 'form[detail_info]', { height: '380px', startupFocus : true} );
+	})
+
+	</script>
+
 {% endblock %}
+

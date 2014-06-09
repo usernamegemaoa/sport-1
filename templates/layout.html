@@ -223,7 +223,7 @@
       (the reference to the nav > ul) after page load. Or the navigation
       will not initialize.
       -->
-      {% set navigation_bar = [['dashboard', 'Dashboard', 'fa-home', 'ROLE_USER'], ['pullups', 'Подтягивания', 'fa-legal', 'ROLE_USER'], ['pushups', 'Отжимания', 'fa-legal', 'ROLE_USER'], ['ration', 'Питание', 'fa-legal', 'ROLE_USER'], ['water_ration', 'Вода', 'fa-legal', 'ROLE_USER'], ['summer', 'Лето', 'fa-legal', 'ROLE_USER']] %}
+      {% set navigation_bar = [['dashboard', 'Dashboard', 'fa-home', 'ROLE_USER'], ['pullups', 'Подтягивания', 'fa-arrow-up', 'ROLE_USER'], ['pushups', 'Отжимания', 'fa-arrow-up', 'ROLE_USER'], ['ration', 'Питание', 'fa-heart', 'ROLE_USER'], ['water_ration', 'Вода', 'fa-tint', 'ROLE_USER'], ['summer', 'Лето', 'fa-plane', 'ROLE_USER']] %}
       {% set active_page = app.request.get('_route')|default('dashboard') %}
       {% set breadcrump = ["Dashboard", 'fa-home'] %}
       {# {% set admin_nav = [['admin_switch', 'Switch', 'fa-legal', 'ROLE_ADMIN'], ['admin_news', 'News', 'fa-legal', 'ROLE_ADMIN'], ['admin_journal', 'Journal', 'fa-legal', 'ROLE_ADMIN'], ['admin_cronjobs', 'Cronjobs', 'fa-legal', 'ROLE_ADMIN']] %} #}
@@ -242,7 +242,7 @@
             </li>
             {# {% endif %} #}
           {% endfor %}
-          {# {% if app.user is not null %} #}
+          {# {% if app.user is not null %} 
             <li>
               <a href="#"><i class="fa fa-lg fa-fw fa-bar-chart-o"></i> <span class="menu-item-parent">Admin</span></a>
               <ul>
@@ -253,7 +253,7 @@
               {% endfor %}
               </ul>
             </li>
-          {# {% endif %} #}
+           {% endif %} #}
         </ul>
       </nav>
       <span class="minifyme"> <i class="fa fa-arrow-circle-left hit"></i> </span>
@@ -271,7 +271,7 @@
 
         <!-- breadcrumb -->
         <ol class="breadcrumb">
-          <li>Home</li><li>Dashboard</li>
+          <li>Home</li><li>{{ breadcrump.0 }}</li>
         </ol>
         <!-- end breadcrumb -->
 
@@ -295,7 +295,7 @@
         
         <div class="row">
           <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
-            <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-home"></i> Dashboard <span>> My Dashboard</span></h1>
+            <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa {{ breadcrump.1 }}"></i> Здоровье <span>> {{ breadcrump.0 }}</span></h1>
           </div>
           <div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
             <ul id="sparks" class="">

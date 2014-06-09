@@ -14,9 +14,8 @@
 	$.fn.SuperBox = function(options) {
 		
 		var superbox      = $('<div class="superbox-show"></div>'),
-			superboximg   = $('<img src="" class="superbox-current-img"><div id="imgInfoBox" class="superbox-imageinfo inline-block"> <h1>Image Title</h1><span><p><em>http://imagelink.com/thisimage.jpg</em></p><p class="superbox-img-description">Image description</p><p><a href="javascript:void(0);" class="btn btn-primary btn-sm">Edit Image</a> <a href="javascript:void(0);" class="btn btn-danger btn-sm">Delete</a></p></span> </div>'),
+			superboximg   = $('<img src="" class="superbox-current-img"><div id="imgInfoBox" class="superbox-imageinfo inline-block"> <h1>Image Title</h1><span><p><em style="font-size: 20px; font-weight: bold; color: #EFFF7B;">dates of weekend</em></p><p class="superbox-img-description">Image description</p><p><a href="javascript:void(0);" class="btn btn-primary btn-sm add-info">Добавим инфу!</a> <button href="javascript:void(0);" class="btn btn-info btn-sm show-info" data-toggle="modal" data-target="#detail-info-modal">Посмотреть!</button> </p></span> </div>'),
 			superboxclose = $('<div class="superbox-close txt-color-white"><i class="fa fa-times fa-lg"></i></div>');
-		
 		superbox.append(superboximg).append(superboxclose);
 		
 		var imgInfoBox = $('.superbox-imageinfo');
@@ -30,6 +29,9 @@
 					imgData = currentimg.data('img'),
 					imgDescription = currentimg.attr('alt') || "No description",
 					imgLink = imgData,
+					urlAdd = currentimg.data('url-add'),
+					urlShow = currentimg.data('url-show'),
+					dates = currentimg.data('dates'),
 					imgTitle = currentimg.attr('title') || "No Title";
 					
 					//console.log(imgData, imgDescription, imgLink, imgTitle)
@@ -43,9 +45,11 @@
 				//$('#imgInfoBox >:first-child').text(imgTitle);
 				//$('#imgInfoBox .superbox-img-description').text(imgDescription);
 				
-				superboximg.find('em').text(imgLink);
+				superboximg.find('em').text(dates);
 				superboximg.find('>:first-child').text(imgTitle);
 				superboximg.find('.superbox-img-description').text(imgDescription);
+				superboximg.find('a.add-info').attr('href', urlAdd);
+				superboximg.find('button.show-info').attr('href', urlShow);
 				
 				//console.log("fierd")
 				

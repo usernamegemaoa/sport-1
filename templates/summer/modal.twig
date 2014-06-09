@@ -1,0 +1,17 @@
+{% block content %}
+<div class="modal-content">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="myModalLabel">{{ weekend.name }}</h4>
+  </div>
+  <div class="modal-body">
+    <h1>{{ weekend.name }}</h1>
+	<p>{{ weekend.anounce }}</p>
+	<p>{{ weekend.detail_info | raw }}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+    <a type="button" class="btn btn-primary" href="{{ path('summer_update', {'serial_number': weekend.serial_number} )}}">Редактировать</a>
+  </div>
+</div>
+{% endblock %}
