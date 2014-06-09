@@ -6,42 +6,84 @@
 
 
 {% block content %}
-	<h2 class="sub-header">Добавим в статистику</h2>
-	<div class="table-responsive">
-	{{ form_start(form, {'attr': {'role': 'form', 'class': 'form'}}) }}
-	  {{ form_errors(form) }}
-	  <div class="form-group">
-	    {{ form_label(form.value) }}
-	    {{ form_widget(form.value, {'attr': {'class': 'form-control'}}) }}
-	  </div>
-	  <div class="form-group">
-	    {{ form_label(form.place) }}
-	    {{ form_widget(form.place, {'attr': {'class': 'form-control'}}) }}
-	  </div>
-	  <div class="form-group">
-	    {{ form_label(form.fatigue) }}
-	    {{ form_widget(form.fatigue, {'attr': {'class': 'form-control'}}) }}
-	  </div>
-	  {{ form_widget(form.add, {'attr': {'class': 'btn btn-default'}}) }}
-	{{ form_end(form) }}
-	<h2 class="sub-header">Статистика за сегодня</h2>
-	<table class="table table-hover">
-		<thead>
-			<tr>
-				<th>Время</th>
-				<th>Количество подтягиваний</th>
-				<th>Место тренировки</th>
-			</tr>
-		</thead>
-	{% for pullup in pullups %}
-	    <tr>
-	    	<td>{{ pullup.timestamp }}</td>
-	    	<td>{{ pullup.value }}</td>
-	    	<td>{{ pullup.placename }}</td>
-	    </tr>
-	{% endfor %}
-	</table>
-	<hr/>
-	<p>Итого: <b>{{ sum.sum }}</b></p>
-	</div>
+	<div class="row">
+	{% block widget_top %}
+		<article class="col-sm-12">
+			<!-- new widget -->
+			<div class="jarviswidget jarviswidget-color-blueDark" id="wid-pullups" data-widget-editbutton="false" data-widget-fullscreenbutton="false">
+				<!-- widget options:
+				usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+				data-widget-colorbutton="false"
+				data-widget-editbutton="false"
+				data-widget-togglebutton="false"
+				data-widget-deletebutton="false"
+				data-widget-fullscreenbutton="false"
+				data-widget-custombutton="false"
+				data-widget-collapsed="true"
+				data-widget-sortable="false"
+
+				-->
+		{% endblock %} 
+			{% block widget_header %}
+				<header>
+					<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
+					<h2>Подтягивания </h2>
+				</header>
+			{% endblock %}
+
+				<!-- widget div-->
+				<div class="padding">
+					<!-- widget edit box -->
+					<div class="jarviswidget-editbox">
+
+						test
+					</div>
+					<!-- end widget edit box -->
+
+					<div class="widget-body">
+						{% block widget_body %}
+							{{ form_start(form, {'attr': {'role': 'form', 'class': 'form'}}) }}
+							  {{ form_errors(form) }}
+							  <div class="form-group">
+							    {{ form_label(form.value) }}
+							    {{ form_widget(form.value, {'attr': {'class': 'form-control'}}) }}
+							  </div>
+							  <div class="form-group">
+							    {{ form_label(form.place) }}
+							    {{ form_widget(form.place, {'attr': {'class': 'form-control'}}) }}
+							  </div>
+							  <div class="form-group">
+							    {{ form_label(form.fatigue) }}
+							    {{ form_widget(form.fatigue, {'attr': {'class': 'form-control'}}) }}
+							  </div>
+							  {{ form_widget(form.add, {'attr': {'class': 'btn btn-default'}}) }}
+							{{ form_end(form) }}
+							<h2 class="sub-header">Статистика за сегодня</h2>
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th>Время</th>
+										<th>Количество подтягиваний</th>
+										<th>Место тренировки</th>
+									</tr>
+								</thead>
+							{% for pullup in pullups %}
+							    <tr>
+							    	<td>{{ pullup.timestamp }}</td>
+							    	<td>{{ pullup.value }}</td>
+							    	<td>{{ pullup.placename }}</td>
+							    </tr>
+							{% endfor %}
+							</table>
+							<hr/>
+							<p>Итого: <b>{{ sum.sum }}</b></p>
+						{% endblock %}
+					</div>
+
+				</div>
+				<!-- end widget div -->
+			</div>
+			<!-- end widget -->
+		</article>
 {% endblock %}
