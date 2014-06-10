@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
 
-    <title> SmartAdmin </title>
+    <title> ActiveLife. {% block title %}{% endblock %} </title>
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -67,7 +67,7 @@
       <div id="logo-group">
 
         <!-- PLACE YOUR LOGO HERE -->
-        <span id="logo"> <img src="{{ app.request.basepath }}/img/logo.png" alt="SmartAdmin"> </span>
+        <span id="logo"> <img src="{{ app.request.basepath }}/img/logo.png" alt="ActiveLife" style="margin-top: -11px; margin-left: -19px"> </span>
         <!-- END LOGO PLACEHOLDER -->
 
         <!-- Note: The activity badge color changes when clicked and resets the number to 0
@@ -223,7 +223,7 @@
       (the reference to the nav > ul) after page load. Or the navigation
       will not initialize.
       -->
-      {% set navigation_bar = [['dashboard', 'Dashboard', 'fa-home', 'ROLE_USER'], ['pullups', 'Подтягивания', 'fa-arrow-up', 'ROLE_USER'], ['pushups', 'Отжимания', 'fa-arrow-up', 'ROLE_USER'], ['ration', 'Питание', 'fa-heart', 'ROLE_USER'], ['water_ration', 'Вода', 'fa-tint', 'ROLE_USER'], ['summer', 'Лето', 'fa-plane', 'ROLE_USER']] %}
+      {% set navigation_bar = [['pullups', 'Подтягивания', 'fa-arrow-up', 'ROLE_USER'], ['pushups', 'Отжимания', 'fa-arrow-up', 'ROLE_USER'], ['ration', 'Питание', 'fa-heart', 'ROLE_USER'], ['water_ration', 'Вода', 'fa-tint', 'ROLE_USER'], ['summer', 'Лето', 'fa-plane', 'ROLE_USER']] %}
       {% set active_page = app.request.get('_route')|default('dashboard') %}
       {% set breadcrump = ["Dashboard", 'fa-home'] %}
       {# {% set admin_nav = [['admin_switch', 'Switch', 'fa-legal', 'ROLE_ADMIN'], ['admin_news', 'News', 'fa-legal', 'ROLE_ADMIN'], ['admin_journal', 'Journal', 'fa-legal', 'ROLE_ADMIN'], ['admin_cronjobs', 'Cronjobs', 'fa-legal', 'ROLE_ADMIN']] %} #}
