@@ -6,8 +6,9 @@
 
 
 {% block content %}
+{% for item in weekends %}
 <!-- Modal -->
-<div class="modal fade" id="detail-info-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="{{ item.serial_number }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
    <div class="modal-content">
       <div class="modal-header">
@@ -24,14 +25,14 @@
     </div>
   </div>
 </div>
+{% endfor %}
 	<!-- row -->
 	<div class="row">
 		<!-- SuperBox -->
 		<div class="superbox col-sm-12">
 			{% for item in weekends %}
-				<!-- Modal -->
-				<div class="superbox-list">
-					<img src="{{ app.request.basepath }}/img/summer/{{ item.serial_number }}.jpg" data-img="{{ app.request.basepath }}/img/summer/{{ item.serial_number }}-full.jpg" alt="{{ item.anounce }}" title="{{ item.name }}" data-url-add="{{ path('summer_update', {'serial_number': item.serial_number}) }}" data-url-show="{{ path('summer_modal', {'serial_number': item.serial_number}) }}" data-dates="{{item.dates.from}} - {{item.dates.to}}" class="superbox-img">
+				<div class="superbox-list {% if item.serial_number is odd %} tilt {% else %} tilt_r {% endif %}">
+					<img src="{{ app.request.basepath }}/img/summer/{{ item.serial_number }}.jpg" data-img="{{ app.request.basepath }}/img/summer/{{ item.serial_number }}-full.jpg" alt="{{ item.anounce }}" title="{{ item.name }}" data-url-add="{{ path('summer_update', {'serial_number': item.serial_number}) }}" data-url-show="{{ path('summer_modal', {'serial_number': item.serial_number}) }}" data-dates="{{item.dates.from}} - {{item.dates.to}}" data-modal="{{ item.serial_number }}" class="superbox-img" style="border-radius: 10px;">
 				</div>
 			{% endfor %}
 			<div class="superbox-float"></div>

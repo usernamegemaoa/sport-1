@@ -32,6 +32,7 @@
 					urlAdd = currentimg.data('url-add'),
 					urlShow = currentimg.data('url-show'),
 					dates = currentimg.data('dates'),
+					modalId = currentimg.data('modal'),
 					imgTitle = currentimg.attr('title') || "No Title";
 					
 					//console.log(imgData, imgDescription, imgLink, imgTitle)
@@ -50,6 +51,7 @@
 				superboximg.find('.superbox-img-description').text(imgDescription);
 				superboximg.find('a.add-info').attr('href', urlAdd);
 				superboximg.find('button.show-info').attr('href', urlShow);
+				superboximg.find('button.show-info').attr('data-target', '#' + modalId);
 				
 				//console.log("fierd")
 				
