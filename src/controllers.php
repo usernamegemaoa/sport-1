@@ -13,51 +13,59 @@ $app->match('/', function (Request $request) use ($app) {
         'date' => date('Y-m-d 06:00:00')
         );
     if (!$app['db']->executeQuery($sql, $params)->fetch()) {
-        return $app->redirect($app['url_generator']->generate('hello'));
-    }
-    $sql = 'SELECT id, name FROM places';
-    $dbPlaces = $app['db']->fetchAll($sql);
-    foreach ($dbPlaces as $place) {
-        $places[$place['id']] = $place['name'];
-    }
-    $builder = $app['form.factory']->createBuilder('form');
-    $form = $builder
-        ->setAction($app["url_generator"]->generate('dashboard'))
-        ->add('value', 'integer', 
-            array(
-                'attr' => array(
-                    'placeholder' => 'Количество подтягиваний',
-                    'value' => '10'
-                ),
-                'required' => true
-            )
-        )
-        ->add('place', 'choice', array(
-            'choices' => $places
-            ))
-        ->add('add', 'submit')
-        ->getForm();
-    
-    // Add check for same name
-    $form->handleRequest($request);
-    if ($form->isSubmitted()) {
-        if ($form->isValid()) {
-            $data = $form->getData();
-            $app['db']->insert('pullups', array(
-                'value' => $data['value'],
-                'place' => $data['place']
-                ));
-            return $app->redirect($app['url_generator']->generate('dashboard'));
-        }
+        // return $app->redirect($app['url_generator']->generate('hello'));
     }
     $sql = 'SELECT ups.value as value, ups.timestamp as timestamp, p.name as placename FROM pullups ups JOIN places p ON ups.place = p.id';
     $pullups = $app['db']->fetchAll($sql);
     $sql = 'SELECT SUM(value) as sum FROM pullups';
     $sum = $app['db']->executeQuery($sql)->fetch();
+
+    /**
+     * Pullups history
+     */
+    $tmp = array();
+    $sql = 'SELECT value, timestamp FROM pullups WHERE DATE_SUB(CURDATE(),INTERVAL :days DAY) <= timestamp LIMIT 1000';
+    $params = array(
+        'days' => 20
+        );
+    foreach ($app['db']->fetchAll($sql, $params) as $item) {
+        $day = substr($item['timestamp'], 0, 10);
+        if (!isset($tmp[$day])) {
+            $tmp[$day] = 0;
+        }
+        $tmp[$day] += $item['value'];
+    }
+    foreach ($tmp as $date => $day) {
+        $pullupsHistory[] = array(
+            'period' => $date,
+            'pullups' => $day
+            );
+    }
+
+    /**
+     * Pushups history
+     */
+    $tmp = array();
+    $sql = 'SELECT value, timestamp FROM pushups WHERE DATE_SUB(CURDATE(),INTERVAL :days DAY) <= timestamp LIMIT 1000';
+    $params = array(
+        'days' => 20
+        );
+    foreach ($app['db']->fetchAll($sql, $params) as $item) {
+        $day = substr($item['timestamp'], 0, 10);
+        if (!isset($tmp[$day])) {
+            $tmp[$day] = 0;
+        }
+        $tmp[$day] += $item['value'];
+    }
+    foreach ($tmp as $date => $day) {
+        $pushupsHistory[] = array(
+            'period' => $date,
+            'pushups' => $day
+            );
+    }
     return $app['twig']->render('index.html', array(
-        'pullups' => $pullups,
-        'sum' => $sum,
-        'form' => $form->createView()
+        'pullupsHistory' => json_encode($pullupsHistory),
+        'pushupsHistory' => json_encode($pushupsHistory)
         ));
 })
 ->bind('dashboard')

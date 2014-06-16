@@ -9,7 +9,9 @@ use Silex\Provider\FormServiceProvider;
 use Silex\Provider\TranslationServiceProvider;
 use Silex\Provider\SessionServiceProvider;
 
+
 $app = new Application();
+$app->register(new SessionServiceProvider());
 $app->register(new UrlGeneratorServiceProvider());
 $app->register(new ValidatorServiceProvider());
 $app->register(new ServiceControllerServiceProvider());
@@ -18,7 +20,6 @@ $app->register(new FormServiceProvider());
 $app->register(new TranslationServiceProvider(), array(
     'locale_fallbacks' => array('ru'),
 ));
-$app->register(new SessionServiceProvider());
 
 $app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
     // add custom globals, filters, tags, ...
