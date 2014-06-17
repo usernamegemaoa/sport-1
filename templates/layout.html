@@ -223,7 +223,7 @@
       (the reference to the nav > ul) after page load. Or the navigation
       will not initialize.
       -->
-      {% set navigation_bar = [['pullups', 'Подтягивания', 'fa-arrow-up', 'ROLE_USER'], ['pushups', 'Отжимания', 'fa-arrow-up', 'ROLE_USER'], ['ration', 'Питание', 'fa-heart', 'ROLE_USER'], ['water_ration', 'Вода', 'fa-tint', 'ROLE_USER'], ['summer', 'Лето', 'fa-plane', 'ROLE_USER']] %}
+      {% set navigation_bar = [['dashboard', 'Общая информация', 'fa-arrow-up', 'ROLE_USER'], ['pullups', 'Подтягивания', 'fa-arrow-up', 'ROLE_USER'], ['pushups', 'Отжимания', 'fa-arrow-up', 'ROLE_USER'], ['ration', 'Питание', 'fa-heart', 'ROLE_USER'], ['water_ration', 'Вода', 'fa-tint', 'ROLE_USER'], ['summer', 'Лето', 'fa-plane', 'ROLE_USER']] %}
       {% set active_page = app.request.get('_route')|default('dashboard') %}
       {% set breadcrump = ["Dashboard", 'fa-home'] %}
       {# {% set admin_nav = [['admin_switch', 'Switch', 'fa-legal', 'ROLE_ADMIN'], ['admin_news', 'News', 'fa-legal', 'ROLE_ADMIN'], ['admin_journal', 'Journal', 'fa-legal', 'ROLE_ADMIN'], ['admin_cronjobs', 'Cronjobs', 'fa-legal', 'ROLE_ADMIN']] %} #}

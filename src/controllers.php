@@ -13,7 +13,7 @@ $app->match('/', function (Request $request) use ($app) {
         'date' => date('Y-m-d 06:00:00')
         );
     if (!$app['db']->executeQuery($sql, $params)->fetch()) {
-        // return $app->redirect($app['url_generator']->generate('hello'));
+        return $app->redirect($app['url_generator']->generate('hello'));
     }
     $sql = 'SELECT ups.value as value, ups.timestamp as timestamp, p.name as placename FROM pullups ups JOIN places p ON ups.place = p.id';
     $pullups = $app['db']->fetchAll($sql);
