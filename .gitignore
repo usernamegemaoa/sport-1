@@ -18,6 +18,7 @@ app/bootstrap*
 
 # Symfony directories
 vendor/*
+!/vendor/jasongrimes/silex-simpleuser/src/
 */logs/*
 */cache/*
 web/uploads/*
