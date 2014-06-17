@@ -36,3 +36,29 @@ $dbConfig['dbname'] = 'sport';
 unset($dbConfig['charset']);
 $app['db.options'] = $dbConfig;
 
+
+$app->register(new Silex\Provider\SecurityServiceProvider(), array(
+    'security.firewalls' => array(
+        'secured_area' => array(
+            'pattern' => '^.*$',
+            'anonymous' => true,
+            'remember_me' => array(),
+            'form' => array(
+                'login_path' => '/user/login',
+                'check_path' => '/user/login_check',
+            ),
+            'logout' => array(
+                'logout_path' => '/user/logout',
+            ),
+            'users' => $app->share(function($app) { return $app['user.manager']; }),
+        ),
+    ),
+));
+// Note: As of this writing, RememberMeServiceProvider must be registered *after* SecurityServiceProvider or SecurityServiceProvider
+// throws 'InvalidArgumentException' with message 'Identifier "security.remember_me.service.secured_area" is not defined.'
+$app->register(new Silex\Provider\RememberMeServiceProvider());
+// Register the SimpleUser service provider.
+$app->register($u = new SimpleUser\UserServiceProvider());
+
+// Optionally mount the SimpleUser controller provider.
+$app->mount('/user', $u);

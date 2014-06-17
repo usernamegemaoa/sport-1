@@ -8,6 +8,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 //Request::setTrustedProxies(array('127.0.0.1'));
 
 $app->match('/', function (Request $request) use ($app) {
+    if (!$app['security']->isGranted('ROLE_USER')) {
+        return $app->redirect($app['url_generator']->generate('user.login'));
+    }
     $sql = 'SELECT date FROM morning_statistics WHERE date >= :date LIMIT 1';
     $params = array(
         'date' => date('Y-m-d 06:00:00')
