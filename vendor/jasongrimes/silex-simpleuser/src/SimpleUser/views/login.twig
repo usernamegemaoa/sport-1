@@ -1,0 +1,71 @@
+{% extends layout_template  %}
+
+{% block title %}Sign in{% endblock %}
+
+{% block content %}
+<div class="well no-padding">
+    {% if app.user %}
+        <p>Hello, {{ app.user.displayName }}.</p>
+        <p><a href="{{ path('user.logout') }}">Sign out</a></p>
+
+    {% else %}
+        {% if error %}
+            <div class="alert alert-error">{{ error|nl2br }}</div>
+        {% endif %}
+        <form action="{{ path('user.login_check') }}" id="login-form" class="smart-form client-form" method="POST">
+            <header>
+                Войдите чтобы отслеживать тренировки
+            </header>
+
+            <fieldset>
+                
+                <section>
+                    <label class="label">Email</label>
+                    <label class="input"> <i class="icon-append fa fa-user"></i>
+                        <input type="text" name="_username" value="{{ last_username }}" required placeholder="Email адрес">
+                        <!-- <b class="tooltip tooltip-top-right"><i class="fa fa-user txt-color-teal"></i> Please enter email</b></label> -->
+                </section>
+
+                <section>
+                    <label class="label">Пароль</label>
+                    <label class="input"> <i class="icon-append fa fa-lock"></i>
+                        <input type="password" name="_password" placeholder="Пароль">
+                        <!-- <b class="tooltip tooltip-top-right"><i class="fa fa-lock txt-color-teal"></i> Enter your password</b> </label> -->
+                    <div class="note">
+                        <a href="forgotpassword.html">Забыли пароль?</a>
+                    </div>
+                </section>
+
+                {% if allowRememberMe %}
+                    <section>
+                        <label class="checkbox">
+                            <input type="checkbox" name="_remember_me" value="true" checked>
+                            <i></i>Это мой компьютер</label>
+                    </section>
+                {% endif %}
+
+            </fieldset>
+            <footer>
+                <button type="submit" class="btn btn-primary">
+                    Начать
+                </button>
+            </footer>
+        </form>
+
+</div>
+
+<h5 class="text-center"> - Or sign in using -</h5>
+                                    
+<ul class="list-inline text-center">
+    <li>
+        <a href="javascript:void(0);" class="btn btn-primary btn-circle"><i class="fa fa-facebook"></i></a>
+    </li>
+    <li>
+        <a href="javascript:void(0);" class="btn btn-info btn-circle"><i class="fa fa-twitter"></i></a>
+    </li>
+    <li>
+        <a href="javascript:void(0);" class="btn btn-warning btn-circle"><i class="fa fa-linkedin"></i></a>
+    </li>
+</ul>
+{% endif %}
+{% endblock %}

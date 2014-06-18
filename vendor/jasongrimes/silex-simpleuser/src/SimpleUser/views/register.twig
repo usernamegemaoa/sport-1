@@ -1,0 +1,76 @@
+{% extends layout_template  %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+
+<div class="well no-padding">
+    {% if app.user %}
+        <p>Hello, {{ app.user.displayName }}.</p>
+        <p><a href="{{ path('user.logout') }}">Sign out</a></p>
+
+    {% else %}
+        {% if error %}
+            <div class="alert alert-error">{{ error|nl2br }}</div>
+        {% endif %}
+        <form action="{{ path('user.login_check') }}" id="login-form" class="smart-form client-form" method="POST">
+            <header>
+                Регистрация участника
+            </header>
+
+            <fieldset>
+                
+                <section>
+                    <label class="label">Имя активного человека</label>
+                    <label class="input"> <i class="icon-append fa fa-user"></i>
+                        <input type="text" name="name" value="{{ name }}" required placeholder="Как Вас зовут?">
+                        <!-- <b class="tooltip tooltip-top-right"><i class="fa fa-user txt-color-teal"></i> Никто не узнает как Вас зовут!</b></label> -->
+                </section>
+
+                <section>
+                    <label class="label">Email</label>
+                    <label class="input"> <i class="icon-append fa fa-envelope"></i>
+                        <input type="text" name="email" value="{{ email }}" required placeholder="Email адрес">
+                        <!-- <b class="tooltip tooltip-top-right"><i class="fa fa-user txt-color-teal"></i> Адрес электронной почты указывать обязательно </b></label> -->
+                </section>
+
+                <section>
+                    <label class="label">Пароль</label>
+                    <label class="input"> <i class="icon-append fa fa-lock"></i>
+                        <input type="password" name="_password" placeholder="Пароль">
+                        <b class="tooltip tooltip-top-right"><i class="fa fa-lock txt-color-teal"></i> Хорошая защита не помещает</b> </label>
+                </section>
+
+                <section>
+                    <label class="label">Повторите введенный пароль</label>
+                    <label class="input"> <i class="icon-append fa fa-lock"></i>
+                        <input type="password" name="_password" placeholder="Повторите пароль">
+                        <!-- <b class="tooltip tooltip-top-right"><i class="fa fa-lock txt-color-teal"></i> Вы должны быть уверены в правильности пароля </b> </label> -->
+                </section>
+
+            </fieldset>
+            <footer>
+                <button type="submit" class="btn btn-primary">
+                    Начать активную жизнь!
+                </button>
+            </footer>
+        </form>
+
+</div>
+
+<h5 class="text-center"> - Или войдите через Вашу любимую социальную сеть -</h5>
+                                    
+<ul class="list-inline text-center">
+    <li>
+        <a href="javascript:void(0);" class="btn btn-primary btn-circle"><i class="fa fa-facebook"></i></a>
+    </li>
+    <li>
+        <a href="javascript:void(0);" class="btn btn-info btn-circle"><i class="fa fa-twitter"></i></a>
+    </li>
+    <li>
+        <a href="javascript:void(0);" class="btn btn-warning btn-circle"><i class="fa fa-linkedin"></i></a>
+    </li>
+</ul>
+{% endif %}
+
+{% endblock %}
