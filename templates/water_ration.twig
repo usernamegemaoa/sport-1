@@ -5,42 +5,87 @@
 {% endblock %}
 
 {% block content %}
-	<h2 class="sub-header">Добавим в статистику</h2>
-	<div class="table-responsive">
-	{{ form_start(form, {'attr': {'role': 'form', 'class': 'form'}}) }}
-	  {{ form_errors(form) }}
-	  <div class="form-group">
-	    {{ form_label(form.time) }}
-	    {{ form_widget(form.time, {'attr': {'class': 'form-control'}}) }}
-	  </div>
-	  <div class="form-group">
-	    {{ form_label(form.type) }}
-	    {{ form_widget(form.type, {'attr': {'class': 'form-control'}}) }}
-	  </div>
-	  <div class="form-group">
-	    {{ form_label(form.value) }}
-	    {{ form_widget(form.value, {'attr': {'class': 'form-control'}}) }}
-	  </div>
-	  {{ form_widget(form.add, {'attr': {'class': 'btn btn-default'}}) }}
-	{{ form_end(form) }}
-	<h2 class="sub-header">Статистика за сегодня</h2>
-	<table class="table table-hover">
-		<thead>
-			<tr>
-				<th>Время</th>
-				<th>Что пил?</th>
-				<th>Сколько выпил?</th>
-			</tr>
-		</thead>
-	{% for ration in rations %}
-	    <tr>
-	    	<td>{{ ration.time }}</td>
-	    	<td>{{ ration.type_name }}</td>
-	    	<td>{{ ration.value }}</td>
-	    </tr>
-	{% endfor %}
-	</table>
-	<hr/>
-	<p>Итого: <b>{{ sum }}</b></p>
-	</div>
+<div class="row">
+	{% block widget_top %}
+		<article class="col-sm-12">
+			<!-- new widget -->
+			<div class="jarviswidget jarviswidget-color-blueDark" id="wid-pushups" data-widget-editbutton="false" data-widget-fullscreenbutton="false">
+				<!-- widget options:
+				usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+				data-widget-colorbutton="false"
+				data-widget-editbutton="false"
+				data-widget-togglebutton="false"
+				data-widget-deletebutton="false"
+				data-widget-fullscreenbutton="false"
+				data-widget-custombutton="false"
+				data-widget-collapsed="true"
+				data-widget-sortable="false"
+
+				-->
+		{% endblock %} 
+			{% block widget_header %}
+				<header>
+					<span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
+					<h2>Прием воды за день </h2>
+				</header>
+			{% endblock %}
+
+				<!-- widget div-->
+				<div class="padding">
+					<!-- widget edit box -->
+					<div class="jarviswidget-editbox">
+
+						test
+					</div>
+					<!-- end widget edit box -->
+
+					<div class="widget-body">
+						{% block widget_body %}
+							<h2 class="sub-header">Добавим в статистику</h2>
+							<div class="table-responsive">
+							{{ form_start(form, {'attr': {'role': 'form', 'class': 'form'}}) }}
+							  {{ form_errors(form) }}
+							  <div class="form-group">
+							    {{ form_label(form.time) }}
+							    {{ form_widget(form.time, {'attr': {'class': 'form-control'}}) }}
+							  </div>
+							  <div class="form-group">
+							    {{ form_label(form.type) }}
+							    {{ form_widget(form.type, {'attr': {'class': 'form-control'}}) }}
+							  </div>
+							  <div class="form-group">
+							    {{ form_label(form.value) }}
+							    {{ form_widget(form.value, {'attr': {'class': 'form-control'}}) }}
+							  </div>
+							  {{ form_widget(form.add, {'attr': {'class': 'btn btn-default'}}) }}
+							{{ form_end(form) }}
+							<h2 class="sub-header">Статистика за сегодня</h2>
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th>Время</th>
+										<th>Что пил?</th>
+										<th>Сколько выпил?</th>
+									</tr>
+								</thead>
+							{% for ration in rations %}
+							    <tr>
+							    	<td>{{ ration.time }}</td>
+							    	<td>{{ ration.type_name }}</td>
+							    	<td>{{ ration.value }}</td>
+							    </tr>
+							{% endfor %}
+							</table>
+							<hr/>
+							<p>Итого: <b>{{ sum }}</b></p>
+							</div>
+							{% endblock %}
+					</div>
+
+				</div>
+				<!-- end widget div -->
+			</div>
+			<!-- end widget -->
+		</article>
 {% endblock %}
