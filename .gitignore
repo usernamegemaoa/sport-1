@@ -16,6 +16,12 @@ sftp-config.json
 # Bootstrap
 app/bootstrap*
 
+### Templates ###
+web/sound
+web/css
+web/fonts
+web/js
+
 # Symfony directories
 vendor/*
 */logs/*
