@@ -5,6 +5,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use App\ActionsFactory\LoadModelBy;
 //Request::setTrustedProxies(array('127.0.0.1'));
 
 $app->match('/', function (Request $request) use ($app) {
@@ -25,47 +26,19 @@ $app->match('/', function (Request $request) use ($app) {
 
     /**
      * Pullups history
-     */
-    $tmp = array();
-    $sql = 'SELECT value, timestamp FROM pullups WHERE DATE_SUB(CURDATE(),INTERVAL :days DAY) <= timestamp LIMIT 1000';
-    $params = array(
-        'days' => 20
-        );
-    foreach ($app['db']->fetchAll($sql, $params) as $item) {
-        $day = substr($item['timestamp'], 0, 10);
-        if (!isset($tmp[$day])) {
-            $tmp[$day] = 0;
-        }
-        $tmp[$day] += $item['value'];
-    }
-    foreach ($tmp as $date => $day) {
-        $pullupsHistory[] = array(
-            'period' => $date,
-            'pullups' => $day
-            );
-    }
+     */    
+    $pullups = LoadModelBy::activity('pullup');
+    $pullups->setConn($app['db'])->setUser($app['user']);  
+    $pullupsHistory = $pullups->history();
 
     /**
      * Pushups history
      */
-    $tmp = array();
-    $sql = 'SELECT value, timestamp FROM pushups WHERE DATE_SUB(CURDATE(),INTERVAL :days DAY) <= timestamp LIMIT 1000';
-    $params = array(
-        'days' => 20
-        );
-    foreach ($app['db']->fetchAll($sql, $params) as $item) {
-        $day = substr($item['timestamp'], 0, 10);
-        if (!isset($tmp[$day])) {
-            $tmp[$day] = 0;
-        }
-        $tmp[$day] += $item['value'];
-    }
-    foreach ($tmp as $date => $day) {
-        $pushupsHistory[] = array(
-            'period' => $date,
-            'pushups' => $day
-            );
-    }
+    $pushups = LoadModelBy::activity('pushup');
+    $pushups->setConn($app['db'])->setUser($app['user']);  
+    $pushupsHistory = $pushups->history();
+
+
     return $app['twig']->render('index.html', array(
         'pullupsHistory' => json_encode($pullupsHistory),
         'pushupsHistory' => json_encode($pushupsHistory)
@@ -569,6 +542,17 @@ $app->match('/summer/update/{serial_number}', function (Request $request, $seria
 })
 ->bind('summer_update')
 ->value('serial_number', '0')
+;
+
+$app->match('/test', function (Request $request) use ($app) {
+    $sql = 'UPDATE morning_statistics SET uid = :uid';
+    $params = array(
+        'uid' => $app['user']->getId()
+        );
+    $app['db']->executeQuery($sql, $params);
+    return 'ok';
+})
+->bind('test');
 ;
 
 $app->error(function (\Exception $e, $code) use ($app) {

@@ -26,7 +26,10 @@
         "jasongrimes/silex-simpleuser": "~0.6.3"
     },
     "autoload": {
-        "psr-0": { "": "src/" }
+        "psr-0": { 
+            "": "src/",
+            "App": "app/src/"
+        }
     },
     "extra": {
         "branch-alias": {
