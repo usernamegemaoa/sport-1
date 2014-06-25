@@ -17,6 +17,10 @@ $app->match('/', function (Request $request) use ($app) {
         'date' => date('Y-m-d 06:00:00')
         );
     if (!$app['db']->executeQuery($sql, $params)->fetch()) {
+        /**
+         * Получаем последние данные по Activity
+         * Если последний день "не вчера" - заполняем всё по 0 раз
+         */
         return $app->redirect($app['url_generator']->generate('hello'));
     }
     $sql = 'SELECT ups.value as value, ups.timestamp as timestamp, p.name as placename FROM pullups ups JOIN places p ON ups.place = p.id';
@@ -123,7 +127,8 @@ $app->match('/pullups', function (Request $request) use ($app) {
             $app['db']->insert('pullups', array(
                 'value' => $data['value'],
                 'place' => $data['place'],
-                'fatigue' => $data['fatigue']
+                'fatigue' => $data['fatigue'],
+                'uid' => $app['user']->getId()
                 ));
             $app['session']->getFlashBag()->add('success', 'Подтягивания учтены. Так держать!');
             return $app->redirect($app['url_generator']->generate('pullups'));
@@ -195,7 +200,8 @@ $app->match('/pushups', function (Request $request) use ($app) {
             $app['db']->insert('pushups', array(
                 'value' => $data['value'],
                 'place' => $data['place'],
-                'fatigue' => $data['fatigue']
+                'fatigue' => $data['fatigue'],
+                'uid' => $app['user']->getId()
                 ));
             $app['session']->getFlashBag()->add('success', 'Отжимания учтены. Будь крепким как скала!');
             return $app->redirect($app['url_generator']->generate('pushups'));
@@ -281,7 +287,8 @@ $app->match('/hello', function (Request $request) use ($app) {
                 'getup_time' => $data['getup_time']->format('H:i:s'),
                 'alarm_time' => $data['alarm_time']->format('H:i:s'),
                 'bed_time' => $data['bed_time']->format('H:i:s'),
-                'weather' => $data['weather']
+                'weather' => $data['weather'],
+                'uid' => $app['user']->getId()
                 ));
             $app['session']->getFlashBag()->add('success', 'Утренняя статистика пополнена. Хорошено дня, Романыч!');
             return $app->redirect($app['url_generator']->generate('dashboard'));    
@@ -338,7 +345,8 @@ $app->match('/ration', function (Request $request) use ($app) {
                 'time' => ($data['time']->format('H:i') != '00:00') ? $data['time']->format('H:i:s') : date('H:i:s'),
                 'number' => ($lastRationInfo) ? $lastRationInfo['number'] + 1 : 1,
                 'kkal' => $data['kkal'],
-                'type' => $data['type']
+                'type' => $data['type'],
+                'uid' => $app['user']->getId()
                 ));
             $sql = 'SELECT mark FROM ration_types WHERE id = :id LIMIT 1';
             $params = array(
@@ -423,7 +431,8 @@ $app->match('/water', function (Request $request) use ($app) {
             $app['db']->insert('water_ration', array(
                 'time' => ($data['time']->format('H:i') != '00:00') ? $data['time']->format('H:i:s') : date('H:i:s'),
                 'type' => $data['type'],
-                'value' => $data['value']
+                'value' => $data['value'],
+                'uid' => $app['user']->getId()
                 ));
             $app['session']->getFlashBag()->add('success', 'Выпивать необходимо до 3-х литров воды! Ты же выпил: ' . ($todayWaterInfo['value']/1000) . ' л.');    
         } else {
