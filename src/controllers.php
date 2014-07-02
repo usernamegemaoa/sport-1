@@ -474,6 +474,48 @@ $app->match('/summer', function (Request $request) use ($app) {
 ->bind('summer')
 ;
 
+$app->match('/trip', function (Request $request) use ($app) {
+    $sql = 'SELECT t.id, t.name, t.description, r.from_city, r.to_city, r.days, r.type FROM trips t JOIN routes r WHERE uid = :uid AND r.tid = t.id';
+    $params = array(
+        'uid' => $app['user']->getId()
+        );
+    $rsTrips = $app['db']->fetchAll($sql, $params);
+    foreach ($rsTrips as $trip) {
+        if (!$trips[$trip['t.id']]) {
+            $trips[$trip['t.id']] = array(
+                'general' => array(
+                    'name' => $trip['t.name'],
+                    'description' => $trip['t.description']
+                    )            
+                );
+        }
+        $trips[$trip['t.id']]['routes'][] = array(
+            'from_city' => $trip['r.from_city'],
+            'to_city' => $trip['r.to_city']
+            // ...
+            );
+
+
+    }
+
+    $sql = 'SELECT serial_number, name, anounce, detail_info, photo FROM summer';
+    $weekends = $app['db']->fetchAll($sql);
+    foreach ($weekends as &$day) {
+        $startUnixTime = strtotime('7 June 2014') + (7 * ($day['serial_number'] - 1) * 24 * 60 * 60);
+        $day['dates'] = array(
+            'from' => date('d.m.Y', $startUnixTime),
+            'to' => date('d.m.Y', $startUnixTime + (24 * 60 * 60))
+            );
+    }
+
+    return $app['twig']->render('summer/summer.twig', array(
+        'weekends' => $weekends
+        ));
+
+})
+->bind('trip')
+;
+
 $app->match('/summer/modal/{serial_number}', function (Request $request, $serial_number) use ($app) {
    $sql = 'SELECT serial_number, name, anounce, detail_info, photo FROM summer WHERE serial_number = :serial_number LIMIT 1';
     $params = array(
